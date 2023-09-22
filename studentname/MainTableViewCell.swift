@@ -25,7 +25,7 @@ class MainTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
         
        photo.layer.cornerRadius = 22
-       photo.layer.borderWidth = 3
+        photo.layer.borderWidth = 1.5
         viewf.layer.cornerRadius = 22
         views.layer.cornerRadius = 22
         viewf.layer.borderColor = UIColor.black.cgColor

@@ -1,22 +1,21 @@
 //
-//  CollectionViewController.swift
+//  SearchViewController.swift
 //  studentname
 //
-//  Created by Lisa Mizuno on 2023/08/04.
+//  Created by Lisa Mizuno on 2023/09/01.
 //
 
 import UIKit
 
-class CollectionViewController: UIViewController,UICollectionViewDelegate, UICollectionViewDataSource {
-    
-    
+class SearchViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource  {
+
     @IBOutlet var collectionView : UICollectionView!
     var number : Int!
-    @IBOutlet var underline : UIView!
+    
     let spacer : CGFloat = 16
     
     let imageArray = ["body","emotion","school","friend","activity"]
-    
+    @IBOutlet var underline : UIView!
     let titleArray = ["魅力","長所","学校","思い出","課外活動"]
     
     override func viewDidLoad() {
@@ -34,7 +33,9 @@ class CollectionViewController: UIViewController,UICollectionViewDelegate, UICol
         layout.sectionInset = UIEdgeInsets(top: spacer, left: spacer, bottom: spacer, right: spacer)
         // レイアウトをcollectionViewに適応させる
         collectionView.collectionViewLayout = layout
+        
         underline.layer.cornerRadius = 6
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -62,15 +63,16 @@ class CollectionViewController: UIViewController,UICollectionViewDelegate, UICol
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         number = indexPath.row
     
-        self.performSegue(withIdentifier: "toAddition", sender: nil)
+        self.performSegue(withIdentifier: "toSearch2", sender: nil)
     }
  
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "toAddition" {
-            let nextView = segue.destination as! AdditionViewController
+        if segue.identifier == "toSearch2" {
+            let nextView = segue.destination as! Search2ViewController
             nextView.number = number
         }
     }
-    
+
+   
 }

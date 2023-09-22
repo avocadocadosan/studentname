@@ -18,5 +18,20 @@ class Memo: Object {
     @objc dynamic var detail: String = " "
     @objc dynamic var number:Int = 0
     @objc dynamic var partnumber:Int = 0
+    
+    @objc dynamic var name:String = " "
+    @objc dynamic var Birthday:String = " "
+    @objc dynamic var grade:String = " "
+    @objc dynamic var Class:String = " "
+    @objc dynamic var Comitee:String = " "
+    @objc dynamic var Club:String = " "
+    @objc dynamic var telephone:String = " "
+    @objc dynamic var male:String = " "
+    @objc dynamic var showsSelf: Bool = true
+  
 }
+
+
+   
+
 

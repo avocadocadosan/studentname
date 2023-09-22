@@ -67,7 +67,7 @@
                 <outlet property="viewf" destination="o6D-lt-jGN" id="dGD-gN-7Kb"/>
                 <outlet property="views" destination="yrf-Rc-gGd" id="pvx-8e-AZX"/>
             </connections>
-            <point key="canvasLocation" x="267" y="8"/>
+            <point key="canvasLocation" x="261" y="0.0"/>
         </tableViewCell>
     </objects>
     <resources>

@@ -11,7 +11,7 @@ import RealmSwift
 class AdditionViewController: UIViewController,UIPickerViewDelegate,UIPickerViewDataSource  {
    
     
-    
+  
     let realm = try! Realm()
     var memo: Results<Memo>!
     let imageArray = ["body","emotion","school","friend","activity"]
@@ -59,6 +59,8 @@ class AdditionViewController: UIViewController,UIPickerViewDelegate,UIPickerView
         nametext.layer.borderColor = CGColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 1.0)
         nametext.layer.borderWidth = 1
         //memo = realm.objects(Memo.self)
+        
+       
     }
     
     override func viewWillAppear(_ animated: Bool) {

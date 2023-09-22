@@ -7,12 +7,25 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
     var memo: Results<Memo>!
 
     @IBOutlet var table : UITableView!
-    @IBOutlet var setting : UIButton!
+//    @IBOutlet var setting : UIButton!
     @IBOutlet var search: UISearchBar!
+    
+    @IBOutlet var menuButton: UIButton!
    
     var number : Int!
     var index : Int!
     let imageArray = ["body","emotion","school","friend","activity"]
+    
+    enum MenuType: String {
+           case all = "全て"
+           case body = "魅力"
+           case emotion = "長所"
+        case school = "学校"
+        case friend = "思い出"
+        case activity = "課外活動"
+       }
+    
+    var selectedMenuType = MenuType.all
    
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,19 +33,96 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
         table.delegate = self
         table.register(UINib(nibName: "MainTableViewCell", bundle: nil), forCellReuseIdentifier: "customCell")
         table.separatorStyle = .none
-        setting.layer.cornerRadius = 25
-        setting.layer.borderColor = CGColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 1.0)
-        setting.layer.borderWidth = 1
         search.delegate = self
-        
+        self.configureMenuButton()
     }
    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+       selectedMenuType = MenuType.all
+        self.configureMenuButton()
         memo = realm.objects(Memo.self).sorted(byKeyPath: "nickname", ascending: true)
      table.reloadData()
+        menuButton.layer.borderColor = CGColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 1.0)
+        menuButton.layer.borderWidth = 2.0
     }
+    
+    private func configureMenuButton() {
+        var actions = [UIMenuElement]()
+       
+        actions.append(UIAction(title: MenuType.all.rawValue, image: nil, state: self.selectedMenuType == MenuType.all ? .on : .off,
+                                handler: { (_) in
+                                    self.selectedMenuType = .all
+                                    // UIActionのstate(チェックマーク)を更新するためにUIMenuを再設定する
+                                    self.configureMenuButton()
+            self.memo = self.realm.objects(Memo.self).sorted(byKeyPath: "nickname", ascending: true)
+            self.table.reloadData()
+                                }))
+        
+        actions.append(UIAction(title: MenuType.body.rawValue, image: nil, state: self.selectedMenuType == MenuType.body ? .on : .off,
+                                handler: { (_) in
+                                    self.selectedMenuType = .body
+                                    // UIActionのstate(チェックマーク)を更新するためにUIMenuを再設定する
+                                    self.configureMenuButton()
+            self.memo = self.realm.objects(Memo.self).filter("number == %@", 0).sorted(byKeyPath: "nickname", ascending: true)
+            self.table.reloadData()
+            self.menuButton.layer.borderColor = CGColor(red: 111/255, green: 101/255, blue: 136/255, alpha: 1.0)
+                                }))
+        
+        actions.append(UIAction(title: MenuType.emotion.rawValue, image: nil, state: self.selectedMenuType == MenuType.emotion ? .on : .off,
+                                handler: { (_) in
+                                    self.selectedMenuType = .emotion
+                                    // UIActionのstate(チェックマーク)を更新するためにUIMenuを再設定する
+                                    self.configureMenuButton()
+            self.memo = self.realm.objects(Memo.self).filter("number == %@", 1).sorted(byKeyPath: "nickname", ascending: true)
+            self.table.reloadData()
+            self.menuButton.layer.borderColor = CGColor(red: 125/255, green: 169/255, blue: 144/255, alpha: 1.0)
+                                }))
+        
+        actions.append(UIAction(title: MenuType.school.rawValue, image: nil, state: self.selectedMenuType == MenuType.school ? .on : .off,
+                                handler: { (_) in
+                                    self.selectedMenuType = .school
+                                    // UIActionのstate(チェックマーク)を更新するためにUIMenuを再設定する
+                                    self.configureMenuButton()
+            self.memo = self.realm.objects(Memo.self).filter("number == %@", 2).sorted(byKeyPath: "nickname", ascending: true)
+            self.table.reloadData()
+            self.menuButton.layer.borderColor = CGColor(red: 200/255, green: 155/255, blue: 81/255, alpha: 1.0)
+                                }))
+        
+        actions.append(UIAction(title: MenuType.friend.rawValue, image: nil, state: self.selectedMenuType == MenuType.friend ? .on : .off,
+                                handler: { (_) in
+                                    self.selectedMenuType = .friend
+                                    // UIActionのstate(チェックマーク)を更新するためにUIMenuを再設定する
+                                    self.configureMenuButton()
+            self.memo = self.realm.objects(Memo.self).filter("number == %@", 3).sorted(byKeyPath: "nickname", ascending: true)
+            self.table.reloadData()
+            self.menuButton.layer.borderColor = CGColor(red: 247/255, green: 231/255, blue: 158/255, alpha: 1.0)
+                                }))
+        
+        actions.append(UIAction(title: MenuType.activity.rawValue, image: nil, state: self.selectedMenuType == MenuType.activity ? .on : .off,
+                                handler: { (_) in
+                                    self.selectedMenuType = .activity
+                                    // UIActionのstate(チェックマーク)を更新するためにUIMenuを再設定する
+                                    self.configureMenuButton()
+            self.memo = self.realm.objects(Memo.self).filter("number == %@", 4).sorted(byKeyPath: "nickname", ascending: true)
+            self.table.reloadData()
+            self.menuButton.layer.borderColor = CGColor(red: 41/255, green: 179/255, blue: 196/255, alpha: 1.0)
+                                }))
+
+        // UIButtonにUIMenuを設定
+        menuButton.menu = UIMenu(title: "", options: .displayInline, children: actions)
+        // こちらを書かないと表示できない場合があるので注意
+        menuButton.showsMenuAsPrimaryAction = true
+        // ボタンの表示を変更
+        menuButton.setTitle(self.selectedMenuType.rawValue, for: .normal)
+    }
+
+   
+
+
+
+
    
         
         func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -83,10 +173,10 @@ class MainViewController: UIViewController, UITableViewDelegate, UITableViewData
             performSegue(withIdentifier: "toNextViewController", sender: nil)
         }
    
-    @IBAction func Setting(){
-        
-        performSegue(withIdentifier: "toSettingViewController", sender: nil)
-    }
+//    @IBAction func Setting(){
+//
+//        performSegue(withIdentifier: "toSettingViewController", sender: nil)
+//    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "toNextViewController"{

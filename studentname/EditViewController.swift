@@ -1,4 +1,11 @@
 //
+//  EditViewController.swift
+//  studentname
+//
+//  Created by Lisa Mizuno on 2023/09/08.
+//
+
+//
 //  DetailViewController.swift
 //  studentname
 //
@@ -10,7 +17,7 @@ import RealmSwift
 
 // (追記)情報持たせるClass
 
-class DetailViewController: UIViewController {
+class EditViewController: UIViewController {
     
     @IBOutlet var whiteview : UIView!
     @IBOutlet var blueview : UIView!
@@ -21,6 +28,27 @@ class DetailViewController: UIViewController {
     @IBOutlet var namelabel : UILabel!
     @IBOutlet var underline : UIView!
     @IBOutlet private weak var tableView: UITableView!
+    let realm = try! Realm()
+    var memo : Memo!
+    var result: Results<Memo>!
+    var editmemo: Memo!
+    var category: String = " "
+    var feature: String = " "
+    var nickname: String = " "
+    var detail: String = " "
+    var number:Int = 0
+    var partnumber:Int = 0
+    
+    var nametext:String = " "
+    var birthdaytext: String = " "
+    var gradetext: String = " "
+    var classtext: String = " "
+    var comiteetext:String = " "
+    var clubtext: String = " "
+    var telephonetext:String = " "
+    var linetext:String = " "
+    
+    
     // (追記)セクションに表示するタイトル名の入った配列
     let sectionTitle: [String] = ["名前", "学校", "連絡先"]
     
@@ -30,8 +58,7 @@ class DetailViewController: UIViewController {
                   [Memo(),Memo()]]
     
     
-    let realm = try! Realm()
-    var memo : Memo!
+    
     let imageArray = ["body","emotion","school","friend","activity"]
     let titleArray = ["魅力","長所","学校","思い出","課外活動"]
     let realmArray = ["name","Birthday","grade","Class","Comitee","Club","telephone","male"]
@@ -43,7 +70,7 @@ class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.register(UINib(nibName: "TableViewDetailCell", bundle: nil), forCellReuseIdentifier: "customCell")
+        tableView.register(UINib(nibName: "TableViewDetailCell", bundle: nil), forCellReuseIdentifier: "InputTextCell")
         
         whiteview.layer.cornerRadius = 20
         whiteview.layer.borderColor = CGColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 1.0)
@@ -116,8 +143,8 @@ class DetailViewController: UIViewController {
         partimage.image = UIImage(named: imageArray[row])
         tableView.reloadData()
         
-       
-     
+        
+        
     }
     
     
@@ -126,33 +153,39 @@ class DetailViewController: UIViewController {
         dismiss(animated: true)
     }
     @IBAction func hennsyuu(){
-        self.performSegue(withIdentifier: "toViewController", sender: nil)
+                
+               result = realm.objects(Memo.self)
+                try! realm.write{
+                    editmemo.name = nametext
+                    editmemo.Birthday = birthdaytext
+                    editmemo.Comitee = comiteetext
+                    editmemo.Club = clubtext
+                    editmemo.grade = gradetext
+                    editmemo.Class = classtext
+                    editmemo.telephone = telephonetext
+                    editmemo.male = linetext
+                    editmemo.category = category
+                    editmemo.nickname = nickname
+                    editmemo.feature = feature
+                    editmemo.nickname = nickname
+                    editmemo.detail = detail
+                    editmemo.number = number
+                    editmemo.partnumber = partnumber
+                }
         
-  
+                self.dismiss(animated: true, completion: nil)
+        
+        
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-       if segue.identifier == "toViewController"{
-            let nextVC = segue.destination as! ViewController
-            
-            nextVC.editmemo = memo
-           nextVC.category = memo.category
-           nextVC.nickname = memo.nickname
-           nextVC.feature = memo.feature
-           nextVC.nickname = memo.nickname
-           nextVC.detail = memo.detail
-           nextVC.number = memo.number
-           nextVC.partnumber = memo.partnumber
-            
-        }
-    }
+    
     
 }
-    
 
-    
+
+
 // (追記)TableViewに関する処理
-extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
+extension EditViewController: UITableViewDataSource, UITableViewDelegate {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return dArray.count
@@ -167,38 +200,38 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-       
+        
         return dArray[section].filter{ $0.showsSelf == true }.count
-       
+        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "customCell", for: indexPath) as! TableViewDetailCell
-       
+        let cell = tableView.dequeueReusableCell(withIdentifier: "customCell", for: indexPath) as! TableViewEditCell
+        
         if(indexPath.row==0&&indexPath.section==0){
             cell.mainlabel.text = "名前"
-            cell.detaillabel.text = memo.name
+            nametext = cell.textfield.text!
         }else if (indexPath.row==1&&indexPath.section==0){
             cell.mainlabel.text = "誕生日"
-            cell.detaillabel.text = memo.Birthday
+            birthdaytext = cell.textfield.text!
         }else if (indexPath.row==0&&indexPath.section==1){
             cell.mainlabel.text = "学年"
-            cell.detaillabel.text = memo.grade
+            gradetext = cell.textfield.text!
         }else if(indexPath.row==1&&indexPath.section==1){
             cell.mainlabel.text = "クラス"
-            cell.detaillabel.text = memo.Class
+           classtext = cell.textfield.text!
         }else if (indexPath.row==2&&indexPath.section==1){
             cell.mainlabel.text = "委員会"
-            cell.detaillabel.text = memo.Comitee
+           comiteetext = cell.textfield.text!
         }else if (indexPath.row==3&&indexPath.section==1){
             cell.mainlabel.text = "部活"
-            cell.detaillabel.text = memo.Club
+            clubtext = cell.textfield.text!
         }else if (indexPath.row==0&&indexPath.section==2){
             cell.mainlabel.text = "電話番号"
-            cell.detaillabel.text = memo.telephone
+          telephonetext = cell.textfield.text!
         }else if (indexPath.row==1&&indexPath.section==2){
-            cell.mainlabel.text = "メール"
-            cell.detaillabel.text = memo.male
+            cell.mainlabel.text = "ライン"
+            linetext = cell.textfield.text!
         }
         
         return cell
@@ -214,7 +247,7 @@ extension DetailViewController: UITableViewDataSource, UITableViewDelegate {
     
 }
 // (追記)セクションタイトルに関する処理
-extension DetailViewController: SectionHeaderDelegate {
+extension EditViewController: SectionHeaderDelegate {
     
     func rowsBtnDidTap(_ header: UITableViewHeaderFooterView) {
         guard let seciton = getSection(header: header) else { return }
